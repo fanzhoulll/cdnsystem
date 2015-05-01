@@ -22,11 +22,23 @@ We provide scripts to automatically deploy, run and stop the DNS servers and HTT
 `./[deploy|run|stop]CDN -p <port> -o <origin> -n <name> -u <username> -i <keyfile>`
 
 * -p: port number used by DNS server and HTTP servers (they must be runed on the same port)
+* -o: address of your original server
 * -n: the host name DNS server would response
 * -u: the account name of your replica server
 * -i: the path of your ssh private key file (to login into your replica server)
 
+Notice that in scripts you have to identify the host address of your DNS server and replica server
+
+Of course you can always try to deploy your DNS server and HTTP server manually. The right way to do it is to copy the program to whereever you want and run `make`. To run DNS server you should use:
+
+`./dnsserver -p <port> -n <name>`
+
+To run HTTP server you should use:
+
+`./httpserver -p <port> -o <origin>`
+
 High level approach and challenge 
+--------------------------------
 
 Since the HTTP server and DNS has nothing unique here, we only briefly talk about how we implement the caching policy and CDN mapping algorithm
 
@@ -69,7 +81,3 @@ Many test are done, we only listed some of  them here:
 3. Performance of multi threading support, we write a multithread dig and wget to test whether the system can handle the multithread requests.
 4. Performance test of scripts, whether can we correctly deploy, run and stop the whole system.
 
-Workload distribution
-
-Fan Zhou: design and implementation of HTTP server and  CDN server
-Ajay: design and implementation of DNS server, discussion on design of CDN server
