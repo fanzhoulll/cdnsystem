@@ -1,0 +1,29 @@
+#!/bin/bash
+# format [deploy|run|stop]CDN -p <port> -o <origin> -n <name> -u <username> -i <keyfile>
+port=$2
+origin=$4
+name=$6
+username=$8
+keyfile=${10}
+
+HTTPServerDirectory='~/HttpServer'
+DNSServerDirectory='/home/zhoufan1/rollCDN/DNSServer'
+makeHTTPServer='cd ~/HttpServer/;make'
+makeDNSServer='cd /home/zhoufan1/rollCDN/DNSServer; make'
+rmHTTPServer='rm -r HttpServer'    
+rmDNSServer='rm -r '$DNSServerDirectory
+
+ssh -i $keyfile $username@cs5700cdnproject.ccs.neu.edu $rmDNSServer
+scp -i $keyfile -rp DNSServer $username@cs5700cdnproject.ccs.neu.edu:$DNSServerDirectory
+ssh -i $keyfile $username@cs5700cdnproject.ccs.neu.edu 'chmod -R 777 '$DNSServerDirectory
+ssh -i $keyfile $username@cs5700cdnproject.ccs.neu.edu $makeDNSServer
+
+
+ec2host=("ec2-52-0-73-113.compute-1.amazonaws.com" "ec2-52-16-219-28.eu-west-1.compute.amazonaws.com" "ec2-52-11-8-29.us-west-2.compute.amazonaws.com" "ec2-52-8-12-101.us-west-1.compute.amazonaws.com" "ec2-52-28-48-84.eu-central-1.compute.amazonaws.com" "ec2-52-68-12-77.ap-northeast-1.compute.amazonaws.com" "ec2-52-74-143-5.ap-southeast-1.compute.amazonaws.com" "ec2-52-64-63-125.ap-southeast-2.compute.amazonaws.com" "ec2-54-94-214-108.sa-east-1.compute.amazonaws.com")
+
+for hostname in "${ec2host[@]}"
+do
+	ssh -i $keyfile $username@$hostname 'chmod 777 '$HTTPServerDirectory
+	scp -i $keyfile -rp HttpServer $username@$hostname:$HTTPServerDirectory
+	ssh -i $keyfile $username@$hostname $makeHTTPServer
+done
