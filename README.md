@@ -40,11 +40,11 @@ To run HTTP server you should use:
 High level approach and challenge 
 --------------------------------
 
-Since the HTTP server and DNS has nothing unique here, we only briefly talk about how we implement the caching policy and CDN mapping algorithm
+Since the HTTP server and DNS has nothing unique here, we only briefly talk about how we implement the caching policy and CDN mapping algorithm.
 
-1 Cache policy 
+1. Cache policy 
 
-We download the statistic data of all the view number of each page on wikipedia. The size of data is too big to be put in the program. After analyze we found that most of the view count is only 1 or even 0. Clearly there is no need to include every view record with the system. So we only pick the former 13589 records. We believe this number is large enough for our relative small size of cache.
+We download the statistic data of all the view number of each page on wikipedia. The size of data is too big to be put in the program. After analyze we found that most of the view count is only 1 or even 0. Clearly there is no need to include view record of every website with the system. So we only pick the former 13589 records. We believe this number is large enough for our relative small size of cache.
 
 Whenever a HTTP fetch some new content from original server, it first check if it has already been put into the server. If it is then HTTP server directly provide this content to client, otherwise HTTP server will make judgement of whether to put this content in cache based on its view record and whether the cache has been full.
 
@@ -52,7 +52,7 @@ If the cache has not been full (after put this content), the HTTP server will pu
 
 We also did other optimization like check the host address of page to avoid fetching the wrong page. For example there are two pages, both name index.html, but on host in ece.neu.edu, other host in ccs.neu.edu. Our system can check where does this page come from before return it back to client. 
 
-2 CDN policy
+2. CDN policy
 
 The technique we used here is active measurement. The main idea is like this: whenever a new client comes, since DNS server has no history record of this client, it will always choose the closest server to this client. After that it will notify all the servers to measure their latency to this server and return this information. The DNS will compare the information it got from each server and choose the best one (lowest latency) and record in a DNS cache. Next time when this client comes again the CDN system can get the record out of cache and return back the best server to the client. 
 
@@ -73,6 +73,7 @@ There are many other challenges, like how to maintain the DNS cache, how to prov
 
 
 Test
+----
 
 Many test are done, we only listed some of  them here:
 
