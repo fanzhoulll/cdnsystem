@@ -1,26 +1,30 @@
 # Welcome to CDN system
 
+* [Project website](http://david.choffnes.com/classes/cs4700sp15/project5.php)
 
 Introduction
+---------------
 
-In this project we implement a simple CDN system. There are three components of this system:
 
-1: A DNS server, this server runs on a particular machine. responsible for reply client the IP address. Notice that in this project our DNS server would only be react to the query that has been specified (cs5700cdn.example.com). Other query would not be served.
+In this project we implement a CDN system. There are three components of this system:
 
-2: Nine HTTP servers, distributed all around the world. HTTP servers will be responsible for provide content that client want. All content were fetched from a original server, which locate in Virginia. HTTP server will first fetch content from original server and then send content to interested user. We implement a caching policy to reduce the frequency that HTTP server has to ask for original server.
+1. DNS server, responsible for looking for the IP address for client. Notice that in this project our DNS server would only be react to the query that has been specified (-n). DNS query for other hosts would simply be ignored.
 
-3: A CDN system, it will dynamically choose the best server for certain client. A challenge here is how to always choose the “best” server in dynamically changing network. Notice that in our implementation the CDN system is integrated in DNS server, since it can be viewed as a performance enhancement to the original DNS server.
+2. HTTP servers will be responsible for provide content that client ask for. All content were fetched from a original server, which (in our project) locate in Virginia. We implement a caching policy to reduce the frequency that HTTP server has to ask for content from original server.
+
+3. CDN system, it will dynamically choose the best server for certain client. A challenge here is how to always choose the “best” server in dynamically changing network. Notice that in our implementation the CDN system is integrated in DNS server, since it can be viewed as a performance enhancement to the original DNS server.
 
 Install and Usage
+-----------------
 
 We provide scripts to automatically deploy, run and stop the DNS servers and HTTP servers. The usage of script is as followings:
 
-./[deploy|run|stop]CDN -p <port> -o <origin> -n <name> -u <username> -i <keyfile>
+`./[deploy|run|stop]CDN -p <port> -o <origin> -n <name> -u <username> -i <keyfile>`
 
-p: port number used by DNS server and HTTP servers
-n: the only name that DNS would response
-username: the account name 
-keyfile: the path of your ssh private key file
+* -p: port number used by DNS server and HTTP servers (they must be runed on the same port)
+* -n: the host name DNS server would response
+* -u: the account name of your replica server
+* -i: the path of your ssh private key file (to login into your replica server)
 
 High level approach and challenge 
 
